@@ -1,0 +1,118 @@
+/** @author William Turner
+  * @version 1.0
+  * Tests for Coder version 1.0
+ */ 
+
+
+import junit.framework.TestCase;
+import java.util.Arrays;
+
+public class CoderTests extends TestCase{
+  
+  String s = new String("william");
+  Keyword kw1 = new Keyword("boop");
+  Coder coder1 = new Coder(s, true, kw1);
+  
+  /** Tests for the Constructor
+   */
+  public void testConstructor(){
+    
+    assertTrue("encode not set", (coder1.encode));
+    assertTrue("text not set", coder1.text.equals("william"));
+    assertTrue("keyword not set", coder1.keyword.getKeyword().equals("boop"));
+  }
+  
+  /** Tests for the Caesar Cipher
+   */
+  public void testCaesarCipher(){
+    
+   assertTrue("Caesar Cipher test failed", coder1.caesarCipher(s,1).equals("xjmmjbn")); 
+  }
+  
+  /** Tests for the Vigenere Cipher
+   */
+  public void testVigenereCipher(){
+    
+   assertTrue("Vigenere Cipher test failed", coder1.vigenereCipher(s).equals("xwzajoa")); 
+  }
+  
+  /** Tests for the substitution method
+   */
+  public void testSubstitutionMethod(){
+    
+    Key key1 = new Key("abcdefghijklmnopqrstuvwxyz");
+    Key key2 = new Key("zyxwvutsrqponmlkjihgfedcba");
+    
+   assertTrue("substitution method failed", coder1.substitutionMethod(key1, key2, s).equals("droorzn")); 
+  }
+  
+  /** Tests for the letter frequencies method
+   */
+  public void testLetterFrequencies() {
+    
+      // Strings to tests
+      String emptystring = "";
+      String lowercasesingles = "abcdefghijklmnopqrstuvwxyz";
+      String uppercasesingles = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      String lowercasedoubles = "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz";
+      String uppercasedoubles = "AABBCCDDEEFFGGHHIIJJKKLLMMNNOOPPQQRRSSTTUUVVWWXXYYZZ";
+      String lowercasetriples = "aaabbbcccdddeeefffggghhhiiijjjkkklllmmmnnnooopppqqqrrrssstttuuuvvvwwwxxxyyyzzz";
+      String uppercasetriples = "AAABBBCCCDDDEEEFFFGGGHHHIIIJJJKKKLLLMMMNNNOOOPPPQQQRRRSSSTTTUUUVVVWWWXXXYYYZZZ";
+      String mixedcases = "AbCdEfGhIjKlMnOpQrStUvWxYz";
+      String mixedfrequencies = "abbcccddeffffgggghhhhijkllmnnnoooopppqqrssttuuuvvwxyyyyyz";
+      
+      // arrays that method return array should match
+      int[] zerosarray = new int[26];
+      int[] singlesarray = new int[26];
+      int[] doublesarray = new int[26];
+      int[] triplesarray = new int[26];
+      int[] mixedfrequencyarray = new int[26];
+      
+      // individual values of mixed frequency string character numbers
+      mixedfrequencyarray[0] = 1;
+      mixedfrequencyarray[1] = 2;
+      mixedfrequencyarray[2] = 3;
+      mixedfrequencyarray[3] = 2;
+      mixedfrequencyarray[4] = 1;
+      mixedfrequencyarray[5] = 4;
+      mixedfrequencyarray[6] = 4;
+      mixedfrequencyarray[7] = 4;
+      mixedfrequencyarray[8] = 1;
+      mixedfrequencyarray[9] = 1;
+      mixedfrequencyarray[10] = 1;
+      mixedfrequencyarray[11] = 2;
+      mixedfrequencyarray[12] = 1;
+      mixedfrequencyarray[13] = 3;
+      mixedfrequencyarray[14] = 4;
+      mixedfrequencyarray[15] = 3;
+      mixedfrequencyarray[16] = 2;
+      mixedfrequencyarray[17] = 1;
+      mixedfrequencyarray[18] = 2;
+      mixedfrequencyarray[19] = 2;
+      mixedfrequencyarray[20] = 3;
+      mixedfrequencyarray[21] = 2;
+      mixedfrequencyarray[22] = 1;
+      mixedfrequencyarray[23] = 1;
+      mixedfrequencyarray[24] = 5;
+      mixedfrequencyarray[25] = 1;
+      
+      // loop to fill out uniform arrays
+      for(int i = 0; i < 26; i++) {
+        
+       zerosarray[i] = 0; 
+       singlesarray[i] = 1; 
+       doublesarray[i] = 2; 
+       triplesarray[i] = 3; 
+      }
+      
+      assertTrue("Empty string test failed", Arrays.equals(zerosarray, coder1.countLetters(emptystring)));
+      assertTrue("Lower case singles string test failed", Arrays.equals(singlesarray, coder1.countLetters(lowercasesingles)));
+      assertTrue("Upper case singles string test failed", Arrays.equals(singlesarray, coder1.countLetters(uppercasesingles)));
+      assertTrue("Lower case doubles string test failed", Arrays.equals(doublesarray, coder1.countLetters(lowercasedoubles)));
+      assertTrue("Upper case doubles string test failed", Arrays.equals(doublesarray, coder1.countLetters(uppercasedoubles)));
+      assertTrue("Lower case triples string test failed", Arrays.equals(triplesarray, coder1.countLetters(lowercasetriples)));
+      assertTrue("Upper case triples string test failed", Arrays.equals(triplesarray, coder1.countLetters(uppercasetriples)));
+      assertTrue("Mixed case string test failed", Arrays.equals(singlesarray, coder1.countLetters(mixedcases)));
+      assertTrue("Mixed frequencies test failed", Arrays.equals(mixedfrequencyarray, coder1.countLetters(mixedfrequencies)));
+  }
+}
