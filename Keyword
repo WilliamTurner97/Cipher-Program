@@ -1,0 +1,34 @@
+/** @author Edward Yim and William Turner
+  * @version 1.p
+  * The class for the keyword in a Vigenere Cipher
+ */ 
+public class Keyword {
+ 
+ public String keyword;
+   
+ /** @param String s the string desired as the keyword
+  */ 
+ public Keyword(String s) {
+  keyword = s;
+ }
+ 
+ /** @return <code>keyword<code> the keyword string
+  */ 
+ public String getKeyword() {
+  return keyword;
+ }
+  
+ /** @param int index the index to get the character at
+   * @return <code>keyword.charAt(index)<code> the character at that index
+  */ 
+ public char charAt(int index) {
+  return keyword.charAt(index);
+ }
+ 
+ /** @return <code>keyword.length()<code> the length of the keyword string
+  */ 
+ public int length() {
+  return keyword.length();
+ }
+ 
+}
