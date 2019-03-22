@@ -1,0 +1,296 @@
+/**
+ * @author William Turner
+ * Main class for EECS 393 cipher program project
+ * @version 1.0 3/19/2019
+ * Implemented: Methods for core processes for enciphering/deciphering functions, and some helper methods for
+ * codebreaking process
+ * Not Implemented: Core codebreaking process, some helper methods for codebreaking process, and Main method handling general 
+ * course of action based on commmand line inputs
+ * Development notes: Use of independent classes for parameter objects is cumbersome and may be unnecessary. 
+ * Consider removing from later versions. 
+ */
+
+public class Coder{
+  
+ StringBuilder[] table = new StringBuilder[26];
+ boolean encode;
+ String text;
+ Keyword keyword;
+ Key regularalphabet = new Key("abcdefghijklmnopqrstuvwxyz");
+
+ public Coder(String text, boolean encode, Keyword kw){
+   
+   this.encode = encode;
+   this.text = text;
+   this.keyword = kw;
+   
+   // double for loop to construct vigenere table
+   for(int i = 0; i < 26; i++){
+     table[i] = new StringBuilder("");
+     for(int j = 0; j < 26; j++){
+       
+      table[i].append((char)(97 + ((i + j) % 26))); 
+     }
+   }
+ }
+ 
+ /** The process for the Caesar cipher
+   * @param String s The string representing the text document
+   * @param int shift The shift count to use with the Caesar Cipher
+   * @return <code>this.substitutionMethod(key1, key2, text)<code> the processed text
+  */ 
+ public String caesarCipher(String s, int shift){
+   
+   Key key1 = new Key("");
+   Key key2 = new Key("");
+   
+   if (this.encode) {
+     
+    key1.setString(table[0].toString());
+    key2.setString(table[shift].toString());
+   }
+   
+   else {
+    
+    key1.setString(table[shift].toString());
+    key2.setString(table[0].toString());
+   }  
+   return this.substitutionMethod(key1, key2, s);
+ }
+ 
+ /** The process for the Vigenere cipher
+   * @param String s the text to be worked with
+   * @return <code>returnstring<code> the processed text
+  */
+ public String vigenereCipher(String s) {
+ 
+  StringBuilder returnstring = new StringBuilder("");
+  
+  // for loop to build returnstring
+  for(int i = 0; i < s.length(); i++) {
+    
+    int p = i % keyword.length();
+    returnstring.append(this.caesarCipher(Character.toString(s.charAt(i)), (Character.getNumericValue(keyword.charAt(p))) - 10));
+  }  
+   return returnstring.toString();
+ }
+ 
+ /** The method to perform the monoalphabetic substitution process
+   * @param Key key1 the first half of the key
+   * @param Key key2 the second half of the key
+   * @param String temptext the text to be worked with
+   * @return <code>returnstring.toString()<code> the processed text
+  */ 
+ 
+ public String customCipher(String s, Key key){
+   
+  if (encode)
+    return substitutionMethod(regularalphabet, key, s);
+  else
+    return substitutionMethod(key, regularalphabet, s);
+ }
+ public String substitutionMethod(Key key1, Key key2, String temptext) {
+    
+  StringBuilder returnstring = new StringBuilder();
+    
+    // double for loop to run through text and check character against key to append correct value to returnstring
+    for(int i = 0; i < temptext.length(); i++) {     
+      for(int j = 0; j < key1.length(); j++) {
+        
+        if (temptext.charAt(i) == key1.charAt(j)) {
+          returnstring.append(key2.charAt(j));
+        }
+      }
+    }
+    return returnstring.toString();
+  }
+ 
+ /** The method to count the frequency of characters in a string
+   * @param String s the string to count the letters in
+   * @return <code>frequencies<code> the int array counting the frequency of each character
+  */ 
+ public int[] countLetters(String s){
+   
+   String input = s;
+   int[] frequencies = new int[26];
+    
+    // loop to run through string and index appropriate array value at each character 
+    for(int i = 0; i < input.length(); i++) {
+      
+      switch(input.charAt(i)) {
+        
+        case 'a':
+        case 'A': frequencies[0]++;
+        break;
+        case 'b':
+        case 'B': frequencies[1]++;
+        break;
+        case 'c':
+        case 'C': frequencies[2]++;
+        break;
+        case 'd':
+        case 'D': frequencies[3]++;
+        break;
+        case 'e':
+        case 'E': frequencies[4]++;
+        break;
+        case 'f':
+        case 'F': frequencies[5]++;
+        break;
+        case 'g':
+        case 'G': frequencies[6]++;
+        break;
+        case 'h':
+        case 'H': frequencies[7]++;
+        break;
+        case 'i':
+        case 'I': frequencies[8]++;
+        break;
+        case 'j':
+        case 'J': frequencies[9]++;
+        break;
+        case 'k':
+        case 'K': frequencies[10]++;
+        break;
+        case 'l':
+        case 'L': frequencies[11]++;
+        break;
+        case 'm':
+        case 'M': frequencies[12]++;
+        break;
+        case 'n':
+        case 'N': frequencies[13]++;
+        break;
+        case 'o':
+        case 'O': frequencies[14]++;
+        break;
+        case 'p':
+        case 'P': frequencies[15]++;
+        break;
+        case 'q':
+        case 'Q': frequencies[16]++;
+        break;
+        case 'r':
+        case 'R': frequencies[17]++;
+        break;
+        case 's':
+        case 'S': frequencies[18]++;
+        break;
+        case 't':
+        case 'T': frequencies[19]++;
+        break;
+        case 'u':
+        case 'U': frequencies[20]++;
+        break;
+        case 'v':
+        case 'V': frequencies[21]++;
+        break;
+        case 'w':
+        case 'W': frequencies[22]++;
+        break;
+        case 'x':
+        case 'X': frequencies[23]++;
+        break;
+        case 'y':
+        case 'Y': frequencies[24]++;
+        break;
+        case 'z':
+        case 'Z': frequencies[25]++;
+        break;  
+      } 
+    }   
+    return frequencies;
+  }
+ 
+ public boolean checkForRepeats(String s){
+   
+   String input = s;
+   int[] frequencies = new int[26];
+   
+   for(int i = 0; i < input.length(); i++) {
+      
+      switch(input.charAt(i)) {
+        
+        case 'a':
+        case 'A': if(frequencies[0] != 0) return false; else frequencies[0]++;
+        break;
+        case 'b':
+        case 'B': if(frequencies[1] != 0) return false; else frequencies[1]++;
+        break;
+        case 'c':
+        case 'C': if(frequencies[2] != 0) return false; else frequencies[2]++;
+        break;
+        case 'd':
+        case 'D': if(frequencies[3] != 0) return false; else frequencies[3]++;
+        break;
+        case 'e':
+        case 'E': if(frequencies[4] != 0) return false; else frequencies[4]++;
+        break;
+        case 'f':
+        case 'F': if(frequencies[5] != 0) return false; else frequencies[5]++;
+        break;
+        case 'g':
+        case 'G': if(frequencies[6] != 0) return false; else frequencies[6]++;
+        break;
+        case 'h':
+        case 'H': if(frequencies[7] != 0) return false; else frequencies[7]++;
+        break;
+        case 'i':
+        case 'I': if(frequencies[8] != 0) return false; else frequencies[8]++;
+        break;
+        case 'j':
+        case 'J': if(frequencies[9] != 0) return false; else frequencies[9]++;
+        break;
+        case 'k':
+        case 'K': if(frequencies[10] != 0) return false; else frequencies[10]++;
+        break;
+        case 'l':
+        case 'L': if(frequencies[11] != 0) return false; else frequencies[11]++;
+        break;
+        case 'm':
+        case 'M': if(frequencies[12] != 0) return false; else frequencies[12]++;
+        break;
+        case 'n':
+        case 'N': if(frequencies[13] != 0) return false; else frequencies[13]++;
+        break;
+        case 'o':
+        case 'O': if(frequencies[14] != 0) return false; else frequencies[14]++;
+        break;
+        case 'p':
+        case 'P': if(frequencies[15] != 0) return false; else frequencies[15]++;
+        break;
+        case 'q':
+        case 'Q': if(frequencies[16] != 0) return false; else frequencies[16]++;
+        break;
+        case 'r':
+        case 'R': if(frequencies[17] != 0) return false; else frequencies[17]++;
+        break;
+        case 's':
+        case 'S': if(frequencies[18] != 0) return false; else frequencies[18]++;
+        break;
+        case 't':
+        case 'T': if(frequencies[19] != 0) return false; else frequencies[19]++;
+        break;
+        case 'u':
+        case 'U': if(frequencies[20] != 0) return false; else frequencies[20]++;
+        break;
+        case 'v':
+        case 'V': if(frequencies[21] != 0) return false; else frequencies[21]++;
+        break;
+        case 'w':
+        case 'W': if(frequencies[22] != 0) return false; else frequencies[22]++;
+        break;
+        case 'x':
+        case 'X': if(frequencies[23] != 0) return false; else frequencies[23]++;
+        break;
+        case 'y':
+        case 'Y': if(frequencies[24] != 0) return false; else frequencies[24]++;
+        break;
+        case 'z':
+        case 'Z': if(frequencies[25] != 0) return false; else frequencies[25]++;
+        break;  
+      } 
+   }
+  return true; 
+ }
+}
