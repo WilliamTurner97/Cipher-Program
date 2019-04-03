@@ -1,130 +1,23 @@
 /** @author William Turner
-  * @version 1.0
+  * @version 1.1
   * Object for monoalphabetic cipher key
-  * Development notes: individual index variables seem excessive; See if array format could preserve attached names
  */ 
 public class Key {
   
   String keystring;
   
-  // int variables for place of character in key
-  int indexofa;
-  int indexofb;
-  int indexofc;
-  int indexofd;
-  int indexofe;
-  int indexoff;
-  int indexofg;
-  int indexofh;
-  int indexofi;
-  int indexofj;
-  int indexofk;
-  int indexofl;
-  int indexofm;
-  int indexofn;
-  int indexofo;
-  int indexofp;
-  int indexofq;
-  int indexofr;
-  int indexofs;
-  int indexoft;
-  int indexofu;
-  int indexofv;
-  int indexofw;
-  int indexofx;
-  int indexofy;
-  int indexofz;
+  int[] indexes = new int[26];
  
   public Key (String s) {
     
     keystring = s;
     
-    // loop to set each index variable
-    for (int i = 0; i < s.length(); i++) {
+    for(int i = 0; i < s.length(); i++) {
       
-      switch (keystring.charAt(i)) {
-       
-        case 'a':
-        case 'A': indexofa = i;
-        break;
-        case 'b':
-        case 'B': indexofb = i;
-        break;
-        case 'c':
-        case 'C': indexofc = i;
-        break;
-        case 'd':
-        case 'D': indexofd = i;
-        break;
-        case 'e':  
-        case 'E': indexofe = i;
-        break;
-        case 'f':
-        case 'F': indexoff = i;
-        break;
-        case 'g':
-        case 'G': indexofg = i;
-        break;
-        case 'h':
-        case 'H': indexofh = i;
-        break;
-        case 'i':
-        case 'I': indexofi = i;
-        break;
-        case 'j':
-        case 'J': indexofj = i;
-        break;
-        case 'k':
-        case 'K': indexofk = i;
-        break;
-        case 'l':
-        case 'L': indexofl = i;
-        break;
-        case 'm':
-        case 'M': indexofm = i;
-        break;
-        case 'n':
-        case 'N': indexofn = i;
-        break;
-        case 'o':
-        case 'O': indexofo = i;
-        break;
-        case 'p':
-        case 'P': indexofp = i;
-        break;
-        case 'q':
-        case 'Q': indexofq = i;
-        break;
-        case 'r':
-        case 'R': indexofr = i;
-        break;
-        case 's':
-        case 'S': indexofs = i;
-        break;
-        case 't':
-        case 'T': indexoft = i;
-        break;
-        case 'u':
-        case 'U': indexofu = i;
-        break;
-        case 'v':
-        case 'V': indexofv = i;
-        break;
-        case 'w':
-        case 'W': indexofw = i;
-        break;
-        case 'x':
-        case 'X': indexofx = i;
-        break;
-        case 'y':
-        case 'Y': indexofy = i;
-        break;
-        case 'z':
-        case 'Z': indexofz = i;
-        break;
-      }
+      indexes[((int) s.charAt(i)) - 97] = i;
     }
-  }
+      
+    }
   
   /** gets the character at an index in the key
     * @param int i the index to get the character at
@@ -141,62 +34,7 @@ public class Key {
    */ 
   public int indexOf(char c) {
      
-    switch (c) {
-      
-        case 'a':
-        case 'A': return indexofa;
-        case 'b':
-        case 'B': return indexofb;
-        case 'c':
-        case 'C': return indexofc;
-        case 'd':
-        case 'D': return indexofd;
-        case 'e':  
-        case 'E': return indexofe;
-        case 'f':
-        case 'F': return indexoff;
-        case 'g':
-        case 'G': return indexofg;
-        case 'h':
-        case 'H': return indexofh;
-        case 'i':
-        case 'I': return indexofi;
-        case 'j':
-        case 'J': return indexofj;
-        case 'k':
-        case 'K': return indexofk;
-        case 'l':
-        case 'L': return indexofl;
-        case 'm':
-        case 'M': return indexofm;
-        case 'n':
-        case 'N': return indexofn;
-        case 'o':
-        case 'O': return indexofo;
-        case 'p':
-        case 'P': return indexofp;
-        case 'q':
-        case 'Q': return indexofq;
-        case 'r':
-        case 'R': return indexofr;
-        case 's':
-        case 'S': return indexofs;
-        case 't':
-        case 'T': return indexoft;
-        case 'u':
-        case 'U': return indexofu;
-        case 'v':
-        case 'V': return indexofv;
-        case 'w':
-        case 'W': return indexofw;
-        case 'x':
-        case 'X': return indexofx;
-        case 'y':
-        case 'Y': return indexofy;
-        case 'z':
-        case 'Z': return indexofz;
-      default: return 0;
-    }
+    return indexes[((int) c) - 97];
   }
   
   /** gets the length of the keystring
