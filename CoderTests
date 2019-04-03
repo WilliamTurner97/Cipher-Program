@@ -9,31 +9,43 @@ import java.util.Arrays;
 
 public class CoderTests extends TestCase{
   
-  String s = new String("william");
+  String s = new String("constructorstring");
+  String sentence = new String("the quick red fox jumped over the lazy brown dog");
   Keyword kw1 = new Keyword("boop");
-  Coder coder1 = new Coder(s, true, kw1);
+  Coder coder1 = new Coder();
   
   /** Tests for the Constructor
    */
   public void testConstructor(){
-    
-    assertTrue("encode not set", (coder1.encode));
-    assertTrue("text not set", coder1.text.equals("william"));
-    assertTrue("keyword not set", coder1.keyword.getKeyword().equals("boop"));
   }
   
   /** Tests for the Caesar Cipher
    */
   public void testCaesarCipher(){
-    
-   assertTrue("Caesar Cipher test failed", coder1.caesarCipher(s,1).equals("xjmmjbn")); 
+     
+   assertTrue("CC 0 failed", coder1.caesarCipher(sentence,0,true ).equals(sentence));
+   assertTrue("CC encode 1 failed", coder1.caesarCipher(sentence,1,true ).equals
+                ("uif rvjdl sfe gpy kvnqfe pwfs uif mbaz cspxo eph"));
+   assertTrue("CC decode 1 failed", coder1.caesarCipher("uif rvjdl sfe gpy kvnqfe pwfs uif mbaz cspxo eph",1,false)
+                .equals(sentence));
+   assertTrue("CC encode 3 failed", coder1.caesarCipher(sentence,10,true )
+                .equals("dro aesmu bon pyh tewzon yfob dro vkji lbygx nyq"));
+   assertTrue("CC decode 3 failed", coder1.caesarCipher("dro aesmu bon pyh tewzon yfob dro vkji lbygx nyq",10,false )
+                .equals(sentence));
+   assertTrue("CC 0 failed", coder1.caesarCipher(sentence,18,true )
+                .equals("lzw imauc jwv xgp bmehwv gnwj lzw dsrq tjgof vgy"));
+   assertTrue("CC 0 failed", coder1.caesarCipher("lzw imauc jwv xgp bmehwv gnwj lzw dsrq tjgof vgy",18,false)
+                .equals(sentence));
   }
   
   /** Tests for the Vigenere Cipher
    */
   public void testVigenereCipher(){
     
-   assertTrue("Vigenere Cipher test failed", coder1.vigenereCipher(s).equals("xwzajoa")); 
+   //assertTrue("Vigenere Cipher encode test failed", coder1.vigenereCipher(sentence, kw1, true)
+                //.equals("uvsfvwqzssruplxjndsspjsguvsabnmgfrrdh")); 
+   //assertTrue("Vigenere Cipher decode test failed", 
+            //  coder1.vigenereCipher("uvsfvwqzssruplxjndsspjsguvsabnmgfrrdh", kw1, false).equals(sentence));
   }
   
   /** Tests for the substitution method
@@ -43,7 +55,10 @@ public class CoderTests extends TestCase{
     Key key1 = new Key("abcdefghijklmnopqrstuvwxyz");
     Key key2 = new Key("zyxwvutsrqponmlkjihgfedcba");
     
-   assertTrue("substitution method failed", coder1.substitutionMethod(key1, key2, s).equals("droorzn")); 
+   assertTrue("substitution method failed encode", coder1.substitutionMethod(key1, key2, sentence)
+                .equals("gsv jfrxp ivw ulc qfnkvw levi gsv ozab yildm wlt"));
+   assertTrue("substitution method failed decode", coder1.substitutionMethod
+                (key1, key2, "gsv jfrxp ivw ulc qfnkvw levi gsv ozab yildm wlt").equals(sentence));
   }
   
   /** Tests for the letter frequencies method
@@ -53,12 +68,8 @@ public class CoderTests extends TestCase{
       // Strings to tests
       String emptystring = "";
       String lowercasesingles = "abcdefghijklmnopqrstuvwxyz";
-      String uppercasesingles = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
       String lowercasedoubles = "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz";
-      String uppercasedoubles = "AABBCCDDEEFFGGHHIIJJKKLLMMNNOOPPQQRRSSTTUUVVWWXXYYZZ";
       String lowercasetriples = "aaabbbcccdddeeefffggghhhiiijjjkkklllmmmnnnooopppqqqrrrssstttuuuvvvwwwxxxyyyzzz";
-      String uppercasetriples = "AAABBBCCCDDDEEEFFFGGGHHHIIIJJJKKKLLLMMMNNNOOOPPPQQQRRRSSSTTTUUUVVVWWWXXXYYYZZZ";
-      String mixedcases = "AbCdEfGhIjKlMnOpQrStUvWxYz";
       String mixedfrequencies = "abbcccddeffffgggghhhhijkllmnnnoooopppqqrssttuuuvvwxyyyyyz";
       
       // arrays that method return array should match
@@ -66,35 +77,7 @@ public class CoderTests extends TestCase{
       int[] singlesarray = new int[26];
       int[] doublesarray = new int[26];
       int[] triplesarray = new int[26];
-      int[] mixedfrequencyarray = new int[26];
-      
-      // individual values of mixed frequency string character numbers
-      mixedfrequencyarray[0] = 1;
-      mixedfrequencyarray[1] = 2;
-      mixedfrequencyarray[2] = 3;
-      mixedfrequencyarray[3] = 2;
-      mixedfrequencyarray[4] = 1;
-      mixedfrequencyarray[5] = 4;
-      mixedfrequencyarray[6] = 4;
-      mixedfrequencyarray[7] = 4;
-      mixedfrequencyarray[8] = 1;
-      mixedfrequencyarray[9] = 1;
-      mixedfrequencyarray[10] = 1;
-      mixedfrequencyarray[11] = 2;
-      mixedfrequencyarray[12] = 1;
-      mixedfrequencyarray[13] = 3;
-      mixedfrequencyarray[14] = 4;
-      mixedfrequencyarray[15] = 3;
-      mixedfrequencyarray[16] = 2;
-      mixedfrequencyarray[17] = 1;
-      mixedfrequencyarray[18] = 2;
-      mixedfrequencyarray[19] = 2;
-      mixedfrequencyarray[20] = 3;
-      mixedfrequencyarray[21] = 2;
-      mixedfrequencyarray[22] = 1;
-      mixedfrequencyarray[23] = 1;
-      mixedfrequencyarray[24] = 5;
-      mixedfrequencyarray[25] = 1;
+      int[] mixedfrequencyarray = {1,2,3,2,1,4,4,4,1,1,1,2,1,3,4,3,2,1,2,2,3,2,1,1,5,1};
       
       // loop to fill out uniform arrays
       for(int i = 0; i < 26; i++) {
@@ -106,13 +89,49 @@ public class CoderTests extends TestCase{
       }
       
       assertTrue("Empty string test failed", Arrays.equals(zerosarray, coder1.countLetters(emptystring)));
-      assertTrue("Lower case singles string test failed", Arrays.equals(singlesarray, coder1.countLetters(lowercasesingles)));
-      assertTrue("Upper case singles string test failed", Arrays.equals(singlesarray, coder1.countLetters(uppercasesingles)));
-      assertTrue("Lower case doubles string test failed", Arrays.equals(doublesarray, coder1.countLetters(lowercasedoubles)));
-      assertTrue("Upper case doubles string test failed", Arrays.equals(doublesarray, coder1.countLetters(uppercasedoubles)));
-      assertTrue("Lower case triples string test failed", Arrays.equals(triplesarray, coder1.countLetters(lowercasetriples)));
-      assertTrue("Upper case triples string test failed", Arrays.equals(triplesarray, coder1.countLetters(uppercasetriples)));
-      assertTrue("Mixed case string test failed", Arrays.equals(singlesarray, coder1.countLetters(mixedcases)));
-      assertTrue("Mixed frequencies test failed", Arrays.equals(mixedfrequencyarray, coder1.countLetters(mixedfrequencies)));
+      assertTrue("Singles string test failed", Arrays.equals(singlesarray, coder1.countLetters(lowercasesingles)));
+      assertTrue("Doubles string test failed", Arrays.equals(doublesarray, coder1.countLetters(lowercasedoubles)));
+      assertTrue("Triples string test failed", Arrays.equals(triplesarray, coder1.countLetters(lowercasetriples)));
+      assertTrue("Mixed frequencies test failed", Arrays.equals(mixedfrequencyarray,
+                                                                coder1.countLetters(mixedfrequencies)));
   }
+  
+  /** tests for the checkForRepeats method
+   */ 
+  public void testCheckForRepeats(){
+    
+   // strings that do or don't have repeats 
+   String norepeats = new String("abcdefghijklmnopqrstuvwxyz");
+   String allrepeats = new String("aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz");
+   String somerepeats = new String("aabccdeefgghiijkklmmnoopqqrsstuuvwwxyyz");
+   String justonerepeat = new String("abcdeffghijklmnopqrstuvwxyz");
+   
+   assertTrue("norepeats test failed", !(coder1.checkForRepeats(norepeats)));
+   assertTrue("allrepeats test failed", coder1.checkForRepeats(allrepeats));
+   assertTrue("somerepeats test failed", coder1.checkForRepeats(somerepeats));
+   assertTrue("justonerepeat test failed", coder1.checkForRepeats(justonerepeat));
+  }
+  
+  /** tests for the isItAword method
+   */ 
+  public void testIsItAWord() {
+    
+   assertTrue("the test failed", coder1.isItAWord("the"));
+   assertTrue("crocodile test failed", coder1.isItAWord("crocodile"));
+   assertTrue("pencil test failed", coder1.isItAWord("pencil"));
+   assertTrue("you test failed", coder1.isItAWord("you"));
+   assertTrue("case test failed", coder1.isItAWord("case"));
+  } 
+  
+  /** tests for the percentWords method
+   */
+  public void testpercentWords() {
+    
+   assertTrue("test 1 failed", coder1.percentWords("this is all words") == 100.0); 
+   assertTrue("test 2 failed", coder1.percentWords("this is mstly words") == 68.75);
+   assertTrue("test 3 failed", coder1.percentWords("ths s nt wrds t ll") == 0);
+   assertTrue("test 4 failed", coder1.percentWords("i think ths is prt wor") == 47.05882352941176);
+   assertTrue("test 5 failed", coder1.percentWords("adc word uiop nmn") == 28.57142857142857);
+  }
+  
 }
