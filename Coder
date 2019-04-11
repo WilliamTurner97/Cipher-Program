@@ -18,6 +18,8 @@ public class Coder{
   BufferedReader b;
   Trie t = new Trie();
   String str = new String("start");
+  int ran = 0;
+  int rantwo = 0;
 
  public Coder(){
    
@@ -130,14 +132,13 @@ public class Coder{
       
        if (temptext.charAt(i) == (' '))
           returnstring.append(" ");
-       else {
-      
-         for(int j = 0; j < key1.length(); j++) {
-        
-        if(temptext.charAt(i) == key1.charAt(j)) 
-          returnstring.append(key2.charAt(j));
-         }
-      }
+       
+       else 
+         if (key2.charAt(key1.indexOf(temptext.charAt(i))) == '-')
+            returnstring.append( (char)(temptext.charAt(i) - 32) );
+         else
+           returnstring.append(key2.charAt( key1.indexOf(temptext.charAt(i))) );
+    
     }
     return returnstring.toString();
   }
@@ -146,17 +147,35 @@ public class Coder{
    * @param String s the string to count the letters in
    * @return <code>frequencies<code> the int array counting the frequency of each character
   */ 
- public int[] countLetters(String s){
+ public char[] countLetters(String s){
    
    String input = s;
    int[] frequencies = new int[26];
+   
+   char[] letters = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
     
     // loop to run through string and index appropriate array value at each character 
     for(int i = 0; i < input.length(); i++) {
       
-      frequencies[((int) s.charAt(i)) - 97]++; 
-    }   
-    return frequencies;
+      if(s.charAt(i) != ' ')
+         frequencies[((int) s.charAt(i)) - 97]++; 
+    }  
+    
+    for(int j = 1; j < 26; j++) {
+      
+      char temp = letters[j];
+      int k = j-1;
+      
+      while(k >= 0 && (frequencies[letters[k] - 97] < frequencies[temp - 97])) {
+        
+        letters[k + 1] = letters[k];
+        k = k - 1;
+      }
+      
+      letters[k + 1] = temp;
+    }
+   
+    return letters;
   }
  
  /** checks a string for repeats of characters
@@ -236,4 +255,87 @@ public class Coder{
    }
   return ((inWords / (inWords + notInWords)) * 100); 
  }
+ 
+ /** Converts a string to lower case characters
+   * @param String s the string to be converted
+   * @return <code>returnstring.append(s.charAt(i))<code> the processed string
+  */
+ public String toLowerCase(String s) {
+   
+   StringBuilder returnstring = new StringBuilder("");
+   
+   for(int i = 0; i < s.length(); i++) {
+     
+     if( (64 < ((int)(s.charAt(i)))) && ( ((int)(s.charAt(i))) < 91  ) )
+       returnstring.append( (char)(((int)s.charAt(i)) + 32) );
+     
+     else
+       returnstring.append(s.charAt(i));
+   }
+   
+   return returnstring.toString();
+ }
+ 
+ public String tryKey(Key key, String s) {
+   
+  return this.substitutionMethod(regularalphabet, key, s); 
+ }
+ 
+ public boolean timeTest(int i) {
+   
+  Key k = new Key("abcdefghijklmnopqrstuvwxyz"); 
+  String s = new String("i am the very model of a modern major general" +  
+                          "\n i have information vegetable animal and mineral" +
+                          "\n i know the kings of england and i quote the" +
+                          "\n fights historical from marathon to waterloo in order categorical" + 
+                          "\n i am very well acquainted too with matters mathematical" + 
+                          "\n i understand equations both the simple and quadratical" + 
+                          "\n about binomial theorem i am teeming with a lot of news" + 
+                          "\n with many cheerful facts about the square of the hypotenuse");
+  String ss;
+  
+  for(int j = 0; j < i; j++) {
+    
+   ss = this.substitutionMethod(regularalphabet, k, s); 
+  }
+  
+  return true;
+ }
+ 
+ public void findFirstWord(String s){
+   
+  Key[] theobkeys = new Key[120];
+  
+  char[] letterorder = this.countLetters(s);
+  
+  char[] theob = new char[5];
+    theob[0] = 't';
+    theob[1] = 'h';
+    theob[2] = 'e';
+    theob[3] = 'o';
+    theob[4] = 'b';
+  
+  char[] textfrqs = new char[5];
+  
+  for(int i = 0; i < 5; i++) {
+    
+    textfrqs[i] =  letterorder[i];
+  }
+  
+  StringBuilder ss = new StringBuilder("--------------------------");
+  
+  for(int a = 0; a < 5; a++) {
+    
+    int i = regularalphabet.indexOf(theob[a]);
+    ss.replace(i,i, "t");
+    
+    for(int b = 0; b < 4; b++) {
+      
+      
+    }
+  }
+  
+  System.out.println(ran);
+ }
 }
+
