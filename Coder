@@ -1,7 +1,7 @@
 /**
  * @author William Turner
  * Main class for EECS 393 cipher program project
- * @version 1.4 4/09/2019
+ * @version 1.5 4/11/2019
  */
 
 import java.io.BufferedReader;
@@ -13,18 +13,24 @@ import java.util.Stack;
 
 public class Coder{
   
+  // table used for caesar and vignere ciphers
   StringBuilder[] table = new StringBuilder[26];
+  
+  // key using regular alphabet
   Key regularalphabet = new Key("abcdefghijklmnopqrstuvwxyz");
+  
+  // filereader and bufferedreader for handling text
   FileReader f;
   BufferedReader b;
+  
+  // trie for helper methods
   Trie t = new Trie();
+  
+  // basic string used in testing and debugging
   String str = new String("start");
+  
+  // loop tracking variable
   int ran = 0;
-  int rantwo = 0;
-  int ranthree = 0;
-  int ranfour = 0; 
-  int ranfive = 0;
-  int ransix = 0;
 
  public Coder(){
    
@@ -166,6 +172,7 @@ public class Coder{
          frequencies[((int) s.charAt(i)) - 97]++; 
     }  
     
+    // insertion sort so that return array is sorted highest to lowest frequency
     for(int j = 1; j < 26; j++) {
       
       char temp = letters[j];
@@ -228,16 +235,30 @@ public class Coder{
    // Stringbuilder that temporarily holds each word
    StringBuilder word = new StringBuilder("");
    
+   // whether or not the current word has capital letters
+   boolean hascaps = false;
+   
    /* runs through string, adds character to "word" until it reaches a space, then checks whether or not "word" is a 
     * word using a trie, then adds to the appropriate variable and resets "word"
     */ 
    for(int i = 0; i < s.length(); i++) {
      
+     if(s.charAt(i) > 64 && s.charAt(i) < 91) {
+       
+       hascaps = true;
+       
+     }
+     
      if (i == (s.length() - 1)) {
       
        word.append(s.charAt(i));
        
-       if(t.search(word.toString())) 
+       if(hascaps) {
+         
+        notInWords = notInWords + word.length();
+       }
+       
+       else if(t.search(word.toString())) 
          inWords = inWords + word.length();
        else 
          notInWords = notInWords + word.length();
@@ -245,7 +266,14 @@ public class Coder{
      
      if( (s.charAt(i) == (' ')) ) {
        
-       if(t.search(word.toString())) 
+       if(hascaps) {
+         
+        hascaps = false;
+        notInWords = notInWords + word.length();
+       }
+       
+       else
+        if(t.search(word.toString())) 
          inWords = inWords + word.length();
        else 
          notInWords = notInWords + word.length();  
@@ -269,6 +297,7 @@ public class Coder{
    
    StringBuilder returnstring = new StringBuilder("");
    
+   // runs through string and appends lower case version of all characters to returnstring
    for(int i = 0; i < s.length(); i++) {
      
      if( (64 < ((int)(s.charAt(i)))) && ( ((int)(s.charAt(i))) < 91  ) )
@@ -281,11 +310,21 @@ public class Coder{
    return returnstring.toString();
  }
  
+ /** tries a potential translation key
+   * @param Key key the Key to use for the translation
+   * @param String s the text being worked with
+   * @return <code>this.substitutionMethod(regularalphabet, key, s)<code> the processed text
+  */
  public String tryKey(Key key, String s) {
    
   return this.substitutionMethod(regularalphabet, key, s); 
  }
  
+ /** a development method for testing the number of times the substitution method could run, in order to 
+   * handle timing issues
+   * @param int i the number of times to run the method
+   * @return <code>true<code> when processing is complete
+  */
  public boolean timeTest(int i) {
    
   Key k = new Key("abcdefghijklmnopqrstuvwxyz"); 
@@ -307,6 +346,9 @@ public class Coder{
   return true;
  }
  
+ /** effectively defunct as is now added to tree class; pending functional implementation elsewhere until it 
+   * is deleted
+  */
  public void findFirstWord(String s){
    
   // The array of initial keys to try 
@@ -380,6 +422,7 @@ public class Coder{
           
           ran++;
           theobkeys[ran - 1] = new Key(w.toString());
+          System.out.println(w);
           
           possibilities.insert(d, tempd);
         }
@@ -400,6 +443,8 @@ public class Coder{
      String name;
      name = "name" + (z);
      nodes[z] = new treeNode(theobkeys[z], s, name,this);
+     
+     System.out.println(nodes[z].getKeyedText());
    }
    
    
