@@ -1,0 +1,25 @@
+public class treeNode{
+  
+  Key key;
+  String text;
+  double percentCorrect;
+  Coder coder;
+  String name;
+  String keyedtext;
+  
+  public treeNode(Key k, String t, String n, Coder c) {
+    
+    this.key = k;
+    this.text = t;
+    this.coder = c;
+    this.name = n;
+    
+    keyedtext = coder.substitutionMethod(coder.regularalphabet, this.key, text);
+    percentCorrect = coder.percentWords(keyedtext);
+  }
+  
+  public String getKeyedText() {
+    
+   return keyedtext; 
+  }
+}
