@@ -1,7 +1,8 @@
 /**
  * @author William Turner
  * Main class for EECS 393 cipher program project
- * @version 1.1 3/22/2019
+ * @version 1.3 4/08/2019
+ * initial battery of keys working
  */
 
 import java.io.BufferedReader;
@@ -9,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.ArrayIndexOutOfBoundsException;
 import java.lang.NullPointerException;
+import java.util.Stack;
 
 public class Coder{
   
@@ -20,6 +22,10 @@ public class Coder{
   String str = new String("start");
   int ran = 0;
   int rantwo = 0;
+  int ranthree = 0;
+  int ranfour = 0; 
+  int ranfive = 0;
+  int ransix = 0;
 
  public Coder(){
    
@@ -304,38 +310,86 @@ public class Coder{
  
  public void findFirstWord(String s){
    
+  // The array of initial keys to try 
   Key[] theobkeys = new Key[120];
   
-  char[] letterorder = this.countLetters(s);
+  // The order of letters in s by frequency
+  Character[] letterorder = new Character[26]; 
   
-  char[] theob = new char[5];
+  // The possible characters to add to the key
+  StringBuilder possibilities = new StringBuilder("");
+  
+  // Copy of possibilities
+  StringBuilder possibilitiestemp = new StringBuilder("");
+
+  // fills out letterorder to match countLetters
+  for(int i = 0; i < 26; i++) {
+    
+   letterorder[i] = this.countLetters(s)[i]; 
+  }
+  
+  // Makes array of five letters to attempt all decryptions for
+  Character[] theob = new Character[5];
     theob[0] = 't';
     theob[1] = 'h';
     theob[2] = 'e';
     theob[3] = 'o';
     theob[4] = 'b';
+    
   
-  char[] textfrqs = new char[5];
-  
+  // Adds first five characters in letterOrder to possibilities and possibilitiestemp
   for(int i = 0; i < 5; i++) {
-    
-    textfrqs[i] =  letterorder[i];
-  }
-  
-  StringBuilder ss = new StringBuilder("--------------------------");
-  
-  for(int a = 0; a < 5; a++) {
-    
-    int i = regularalphabet.indexOf(theob[a]);
-    ss.replace(i,i, "t");
-    
-    for(int b = 0; b < 4; b++) {
-      
-      
-    }
-  }
-  
-  System.out.println(ran);
- }
-}
 
+    possibilities.append(letterorder[i].toString());
+    possibilitiestemp.append(letterorder[i].toString());
+  }
+  
+  
+  // Makes the 120 possible test keys with the five most common letters in the text
+  StringBuilder w = new StringBuilder("--------------------------");
+  
+  for(int a = 0; a < 5; a++ ) {
+
+    Character tempa = new Character(possibilities.charAt(a));
+    w.replace(19, 20, tempa.toString());
+    possibilities.delete(a, a + 1);
+    
+    for(int b = 0; b < 4; b++ ) {
+
+      Character tempb = new Character(possibilities.charAt(b));
+      w.replace(7,8, tempb.toString());
+      possibilities.delete(b, b + 1);
+      
+      for(int c= 0; c < 3; c++ ) {
+
+        Character tempc = new Character(possibilities.charAt(c));
+        w.replace(4,5, tempc.toString());
+        possibilities.delete(c, c + 1);
+        
+        for(int d = 0; d < 2; d++ ) {
+          
+          Character tempd = new Character(possibilities.charAt(d));
+          w.replace(14,15, tempd.toString());
+          possibilities.delete(d, d + 1);
+
+          
+          Character tempe = new Character(possibilities.charAt(0));
+          w.replace(1,2, tempe.toString());
+          
+          ran++;
+          System.out.println(w.toString());
+          
+          possibilities.insert(d, tempd);
+        }
+        
+        possibilities.insert(c, tempc);
+      }
+      
+      possibilities.insert(b, tempb);
+    } 
+    
+    possibilities.insert(a, tempa);
+  }
+
+  }
+}
