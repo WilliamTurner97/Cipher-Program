@@ -1,11 +1,24 @@
+/** class for individual nodes in the codebreaking tree
+  * @author William Turner
+  * @version 1.1
+ */
 public class treeNode{
   
+  // the key contained at this node
   Key key;
+  // the text being worked with
   String text;
+  // how correct the text processed with this node's key is
   double percentCorrect;
+  // coder used
   Coder coder;
+  // name of node
   String name;
+  // processed text
   String keyedtext;
+  
+  // array of tree nodes
+  treeNode[] nodes = new treeNode[120];
   
   public treeNode(Key k, String t, String n, Coder c) {
     
@@ -18,8 +31,31 @@ public class treeNode{
     percentCorrect = coder.percentWords(keyedtext);
   }
   
+  /** returns text processed with this node's key
+    * @return <code>keyedtext<code>
+   */
   public String getKeyedText() {
     
    return keyedtext; 
+  }
+  
+  /** quicksort of all child nodes
+    * @param treeNode[] t the nodes to be sorted
+   */
+  public void sortNodes(treeNode[] t) {
+    
+   for(int i = 1; i < 121; i++) {
+      
+      treeNode tempnode = t[i];
+      int j = i-1;
+      
+      while(j >= 0 && (t[j].percentCorrect < tempnode.percentCorrect)) {
+        
+        t[j + 1] = t[j];
+        j = j - 1;
+      }
+      
+      t[j + 1] = tempnode;
+    } 
   }
 }
