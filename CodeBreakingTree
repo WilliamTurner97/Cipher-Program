@@ -1,0 +1,123 @@
+/** @author William Turner
+  * @version 1.0
+  * the main tree structure for the codebreaking process
+ */
+
+public class CodeBreakingTree {
+  
+  // the first node of the tree
+  treeNode headNode; 
+  
+  // array of tree nodes
+  treeNode[] nodes = new treeNode[120];
+  
+  // The array of initial keys to try 
+  Key[] theobkeys = new Key[120];
+  
+  // The order of letters in s by frequency
+  Character[] letterorder = new Character[26]; 
+  
+  // The possible characters to add to the key
+  StringBuilder possibilities = new StringBuilder("");
+  
+  // Copy of possibilities
+  StringBuilder possibilitiestemp = new StringBuilder("");
+  
+  // Makes array of five letters to attempt all decryptions for
+  Character[] theob = new Character[5];
+  
+  // the text being handled at this node
+  String s;
+   
+  // a coder object to try keys, among other things
+  Coder coder;
+  
+  // a usefull loop tracking variable
+  int ran = 0;
+  
+  // process of identifying first node
+  public CodeBreakingTree(String s, Coder cc) {
+    
+    this.s = s;
+    this.coder = cc;
+    
+   // fills out letterorder to match countLetters
+  for(int i = 0; i < 26; i++) {
+    
+   letterorder[i] = coder.countLetters(s)[i]; 
+  }
+  
+    // fills out theob array  
+    theob[0] = 't';
+    theob[1] = 'h';
+    theob[2] = 'e';
+    theob[3] = 'o';
+    theob[4] = 'b';
+  
+  // Adds first five characters in letterOrder to possibilities and possibilitiestemp
+  for(int i = 0; i < 5; i++) {
+
+    possibilities.append(letterorder[i].toString());
+    possibilitiestemp.append(letterorder[i].toString());
+  }
+  
+  // Makes the 120 possible test keys with the five most common letters in the text
+  StringBuilder w = new StringBuilder("--------------------------");
+  
+  for(int a = 0; a < 5; a++ ) {
+
+    Character tempa = new Character(possibilities.charAt(a));
+    w.replace(19, 20, tempa.toString());
+    possibilities.delete(a, a + 1);
+    
+    for(int b = 0; b < 4; b++ ) {
+
+      Character tempb = new Character(possibilities.charAt(b));
+      w.replace(7,8, tempb.toString());
+      possibilities.delete(b, b + 1);
+      
+      for(int c = 0; c < 3; c++ ) {
+
+        Character tempc = new Character(possibilities.charAt(c));
+        w.replace(4,5, tempc.toString());
+        possibilities.delete(c, c + 1);
+        
+        for(int d = 0; d < 2; d++ ) {
+          
+          Character tempd = new Character(possibilities.charAt(d));
+          w.replace(14,15, tempd.toString());
+          possibilities.delete(d, d + 1);
+
+          
+          Character tempe = new Character(possibilities.charAt(0));
+          w.replace(1,2, tempe.toString());
+          
+          ran++;
+          theobkeys[ran - 1] = new Key(w.toString());
+          
+          possibilities.insert(d, tempd);
+        }
+        
+        possibilities.insert(c, tempc);
+      }
+      
+      possibilities.insert(b, tempb);
+    } 
+    
+    possibilities.insert(a, tempa);
+  }
+   ran = 0;
+   
+   //headNode.nodes = nodes;
+   
+   // makes new tree nodes with key battery
+   for(int z = 0; z < 119; z++) {
+     
+     String name;
+     name = "name" + (z);
+     nodes[z] = new treeNode(theobkeys[z], s, name, coder);
+     
+     System.out.println(nodes[z].getKeyedText());
+   }    
+ } 
+}
