@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 /** class for individual BranchNodes in the codebreaking tree
   * @author William Turner
-  * @version 1.4
+  * @version 1.3
  */
 public class treeNode{
   
@@ -74,7 +74,7 @@ public class treeNode{
    
    this.keyedtext = coder.substitutionMethod(coder.regularalphabet, this.key, text);
    this.percentCorrect = coder.percentWords(keyedtext);
-   //this.capsList();
+   this.capsList();
   }
   
   /** gets name of node
@@ -277,12 +277,68 @@ public class treeNode{
    */
   public void makeNodes() {
     
+    if(oneLeft.size() != 0) {
+      
+     char c = oneLeft.get(0).charAt(0);
+     
+     int indexc = (c - 65);
+     
+     for(int i = 0; i < 26; i ++) {
+       
+       Character current = (char)(i + 97);
+       StringBuilder keybuild = new StringBuilder(this.key.getString());
+       keybuild.replace(indexc, indexc + 1, current.toString());
+       Key newkey = new Key(keybuild.toString());
+       this.addNode(new treeNode(newkey, this, i));
+     }
+    }
+    
+    else if (twoLeft.size() != 0) {
+      
+     char c = twoLeft.get(0).charAt(0);
+     char d = twoLeft.get(0).charAt(1);
+     int indexc = (c - 65);
+     int indexd = (d - 65);
+     
+     ArrayList<Character> possibilities = new ArrayList<>();
+     
+     for(int i = 0; i < 26; i++) {
+      
+      Character current = (char)(i + 97);
+      StringBuilder keybuild = new StringBuilder(this.key.getString());
+      keybuild.replace(indexc, indexc + 1, current.toString());
+      possibilities.remove(i);
+      
+      for(int j = 0; j < 25; j++) {
+        
+       Character current2 = (char)(j + 97);
+       keybuild.replace(indexd, indexd + 1, current2.toString());
+       Key newkey = new Key(keybuild.toString());
+       this.addNode(new treeNode(newkey, this, i));
+      }
+     }
+    }
 
   }
   /** insertion sort of all branchnodes
    */
   public void sortNodes() {
-  
+    
+    for(int i = 0; i < BranchNodes.size(); i++) {
+      
+      treeNode temp = BranchNodes.get(i);
+      
+      for(int j = 0; j < i; j++) {
+        
+        if(temp.getPercentCorrect() > BranchNodes.get(j).getPercentCorrect()) {
+       
+         BranchNodes.remove(i);
+         BranchNodes.add(j, temp);
+         j = i;
+        }
+      }
+    }
   } 
 }
+  
   
