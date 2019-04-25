@@ -1,18 +1,20 @@
 /** @author William Turner
-  * @version 1.0
+  * @version 1.2 4/24/2019
   * the main tree structure for the codebreaking process
  */
+
+import java.util.ArrayList;
 
 public class CodeBreakingTree {
   
   // the first node of the tree
   treeNode headNode; 
   
-  // array of tree nodes
-  treeNode[] nodes = new treeNode[120];
+  // array of tree headNode.BranchNodes
+  //ArrayList<treeNode> headNode.BranchNodes = new ArrayList<treeNode>();
   
   // The array of initial keys to try 
-  Key[] theobkeys = new Key[120];
+  ArrayList<Key> theobkeys = new ArrayList<Key>();
   
   // The order of letters in s by frequency
   Character[] letterorder = new Character[26]; 
@@ -24,7 +26,7 @@ public class CodeBreakingTree {
   StringBuilder possibilitiestemp = new StringBuilder("");
   
   // Makes array of five letters to attempt all decryptions for
-  Character[] theob = new Character[5];
+  Character[] theob = new Character[3];
   
   // the text being handled at this node
   String s;
@@ -34,90 +36,99 @@ public class CodeBreakingTree {
   
   // a usefull loop tracking variable
   int ran = 0;
+   int ranfw = 0;
   
-  // process of identifying first node
+  // constructor sets up head node and enacts special branchNode process to find first word
   public CodeBreakingTree(String s, Coder cc) {
     
+    Key startkey = new Key("--------------------------");
+    headNode = new treeNode(startkey, s, "name", cc);
+    boolean found = false;
     this.s = s;
     this.coder = cc;
-    
-   // fills out letterorder to match countLetters
+   
+  // fills out letterorder to match countLetters
   for(int i = 0; i < 26; i++) {
     
    letterorder[i] = coder.countLetters(s)[i]; 
   }
   
-    // fills out theob array  
+  // Makes array of three letters to attempt all decryptions for
+  Character[] theob = new Character[3];
     theob[0] = 't';
     theob[1] = 'h';
     theob[2] = 'e';
-    theob[3] = 'o';
-    theob[4] = 'b';
+    
   
-  // Adds first five characters in letterOrder to possibilities and possibilitiestemp
-  for(int i = 0; i < 5; i++) {
+  // Adds characters in letterOrder to possibilities and possibilitiestemp
+  for(int i = 0; i < 10; i++) {
 
     possibilities.append(letterorder[i].toString());
     possibilitiestemp.append(letterorder[i].toString());
   }
-  
-  // Makes the 120 possible test keys with the five most common letters in the text
+ 
+  // StringBuilder in blank key format to fill differently to create headNode.BranchNodes
   StringBuilder w = new StringBuilder("--------------------------");
   
-  for(int a = 0; a < 5; a++ ) {
-
-    Character tempa = new Character(possibilities.charAt(a));
-    w.replace(19, 20, tempa.toString());
-    possibilities.delete(a, a + 1);
-    
-    for(int b = 0; b < 4; b++ ) {
-
-      Character tempb = new Character(possibilities.charAt(b));
-      w.replace(7,8, tempb.toString());
-      possibilities.delete(b, b + 1);
-      
-      for(int c = 0; c < 3; c++ ) {
-
-        Character tempc = new Character(possibilities.charAt(c));
-        w.replace(4,5, tempc.toString());
-        possibilities.delete(c, c + 1);
-        
-        for(int d = 0; d < 2; d++ ) {
-          
-          Character tempd = new Character(possibilities.charAt(d));
-          w.replace(14,15, tempd.toString());
-          possibilities.delete(d, d + 1);
-
-          
-          Character tempe = new Character(possibilities.charAt(0));
-          w.replace(1,2, tempe.toString());
-          
-          ran++;
-          theobkeys[ran - 1] = new Key(w.toString());
-          
-          possibilities.insert(d, tempd);
-        }
-        
-        possibilities.insert(c, tempc);
-      }
-      
-      possibilities.insert(b, tempb);
-    } 
-    
-    possibilities.insert(a, tempa);
-  }
-   ran = 0;
-   
-   //headNode.nodes = nodes;
-   
-   // makes new tree nodes with key battery
-   for(int z = 0; z < 119; z++) {
+  /* triple for loop tests first 10! possible keys for word "the" by order of likeliness.
+   * removes letter currently added to potential key from possibilites before executing next loop
+   * breaks once achieving >5% percentCorrect
+   */
+  for(int i = 0; i < 10; i++) {
      
-     String name;
-     name = "name" + (z);
-     nodes[z] = new treeNode(theobkeys[z], s, name, coder);
+     Character tempi = new Character(possibilities.charAt(i));
+     w.replace(4, 5, tempi.toString());
+     possibilities.deleteCharAt(i);
+
      
-     System.out.println(nodes[z].getKeyedText());
-   }    
+     for(int j = 0; j < 9; j++) {
+       
+       Character tempj = new Character(possibilities.charAt(j));
+       w.replace(19, 20, tempj.toString());
+       possibilities.deleteCharAt(j);
+       
+       for(int k = 0; k < 8; k++) {
+         
+         Character tempk = new Character(possibilities.charAt(k));
+         w.replace(7, 8, tempk.toString());
+         
+         
+         //theobkeys.add(new Key(w.toString()));
+         Key newkey = new Key(w.toString());
+         
+         // old checking line
+         //System.out.println(w);
+         String name = "name";
+         treeNode n = new treeNode(newkey, s, name, this.coder);
+         headNode.BranchNodes.add(n);
+         if(n.getPercentCorrect() > 5)
+          found = true;
+         if(found)
+           break;
+         ranfw++;
+       }
+       
+       if(found)
+         break;
+       else
+       possibilities.insert(j, tempj);
+     }
+     
+     if(found)
+       break;
+     else
+     possibilities.insert(i, tempi);
+   }
+   
+   // makes new tree headNode.BranchNodes with key battery
+   //for(int z = 0; z < theobkeys.size() - 1; z++) {
+     
+     //String name;
+     //name = "name" + (z);
+     //headNode.BranchNodes.add(new treeNode(theobkeys.get(z), s, name, this.coder));
+     
+     // old checking line
+     //System.out.println(headNode.BranchNodes.get(z).getKeyedText());
+   //}
  } 
 }
