@@ -1,7 +1,7 @@
 /**
  * @author William Turner
  * Main class for EECS 393 cipher program project
- * @version 1.5.5 4/20/2019
+ * @version 1.6 4/25/2019
  */
 
 import java.io.BufferedReader;
@@ -54,7 +54,8 @@ public class Coder{
        t.insert(str);
       }
     }
-    
+   
+    // catches prompt printing of relevant information
     catch (IOException e) {
       
       System.out.println("fail");
@@ -134,36 +135,33 @@ public class Coder{
    * @param String temptext the text to be worked with
    * @return <code>returnstring.toString()<code> the processed text
   */ 
- public String substitutionMethod(Key key1, Key key2, String temptext) {
+ public String substitutionMethod(Key key1, Key key2, String s) {
     
-  StringBuilder returnstring = new StringBuilder();
+  StringBuilder rs = new StringBuilder();
     
     // for loop to run through text and check character against key to append correct value to returnstring
-    for(int i = 0; i < temptext.length(); i++) { 
-       
-      // makes c always lower case
-      char c = temptext.charAt(i);
-      
-      if(c < 97)
-        c = (char)(c + 32);
-      
-       // spaces and newline characters should be directly added to returnstring
-       if (temptext.charAt(i) == (' '))
-          returnstring.append(" ");
-       else
-         if (temptext.charAt(i) == ('\n'))
-          returnstring.append("\n"); 
-         
-         // if key2 isn't complete for this character, simply directly add it as capital
-         else 
-           if (key2.charAt(key1.indexOf(c)) == '-')
-            returnstring.append( (char)(temptext.charAt(i) ) );
-         // if no special case has been activated, add the corresponding character from key2 to returnString
-         else
-           returnstring.append(key2.charAt( key1.indexOf(c) ));
-    
+    for(int i = 0; i < s.length(); i++) { 
+     
+      if(s.charAt(i) == ' ')
+        rs.append(' ');
+      else if(s.charAt(i) == '\n')
+        rs.append('\n');
+      else if(s.charAt(i) > 96 && s.charAt(i) < 123)
+        rs.append(s.charAt(i));
+
+      else if (s.charAt(i) > 64 && s.charAt(i) < 91) { 
+        
+        char c = (char)(s.charAt(i) + 32);
+        
+        if(key1.indexOf(c) == 0 && key1.charAt(0) != c )
+          rs.append(s.charAt(i));
+        else  
+        rs.append(key2.charAt(key1.indexOf(c)));
+        
+      }
     }
-    return returnstring.toString();
+    
+    return rs.toString();
   }
  
  /** The method to count the frequency of characters in a string
@@ -172,7 +170,7 @@ public class Coder{
   */ 
  public char[] countLetters(String s){
    
-   String input = s;
+   String input = this.toLowerCase(s);
    int[] frequencies = new int[26];
    
    char[] letters = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
@@ -180,8 +178,8 @@ public class Coder{
     // loop to run through string and index appropriate array value at each character 
     for(int i = 0; i < input.length(); i++) {
       
-      if(s.charAt(i) != ' ' && s.charAt(i) > 96)
-         frequencies[((int) s.charAt(i)) - 97]++; 
+      if(input.charAt(i) != ' ' && input.charAt(i) > 96)
+         frequencies[((int) input.charAt(i)) - 97]++; 
     }  
     
     // insertion sort so that return array is sorted highest to lowest frequency
@@ -255,6 +253,7 @@ public class Coder{
     */ 
    for(int i = 0; i < s.length(); i++) {
      
+     // checks if current character is capital
      if(s.charAt(i) > 64 && s.charAt(i) < 91) {
        
        hascaps = true;
@@ -265,6 +264,7 @@ public class Coder{
       
        word.append(s.charAt(i));
        
+       // words with capital characters are automatically not in CSEW words
        if(hascaps) {
          
         notInWords = notInWords + word.length();
@@ -276,7 +276,7 @@ public class Coder{
          notInWords = notInWords + word.length();
      }
      
-     if( (s.charAt(i) == (' ')) ) {
+     if( (s.charAt(i) == (' ')) || s.charAt(i) == '\n') {
        
        if(hascaps) {
          
@@ -324,6 +324,25 @@ public class Coder{
    return returnstring.toString();
  }
  
+ public String toCaps(String s) {
+   
+   StringBuilder returnstring = new StringBuilder("");
+   
+   for(int i = 0; i < s.length(); i++) {
+     
+     if(s.charAt(i) > 96 && s.charAt(i) < 123) {
+       
+      char c = (char)(s.charAt(i) - 32);
+      returnstring.append(c);
+     }
+     
+     else
+       returnstring.append(s.charAt(i));
+   }
+  
+   return returnstring.toString();
+ }
+ 
  /** tries a potential translation key
    * @param Key key the Key to use for the translation
    * @param String s the text being worked with
@@ -332,6 +351,7 @@ public class Coder{
  public String tryKey(Key key, String s) {
    
   return this.substitutionMethod(regularalphabet, key, s); 
+   //return this.substitutionMethod(key, regularalphabet, s);
  }
  
  /** a development method for testing the number of times the substitution method could run, in order to 
@@ -359,90 +379,4 @@ public class Coder{
   
   return true;
  }
- 
- /** effectively defunct as is now added to tree class; pending functional implementation elsewhere until it 
-   * is deleted
-  */
- public void findFirstWord(String s){
-   
-  int ranfw = 0;
-   
-  // The array of initial keys to try 
-  Key[] theobkeys = new Key[720];
-  
-  // array of tree nodes
-  treeNode[] nodes = new treeNode[720];
-  
-  // The order of letters in s by frequency
-  Character[] letterorder = new Character[26]; 
-  
-  // The possible characters to add to the key
-  StringBuilder possibilities = new StringBuilder("");
-  
-  // Copy of possibilities
-  StringBuilder possibilitiestemp = new StringBuilder("");
-
-  // fills out letterorder to match countLetters
-  for(int i = 0; i < 26; i++) {
-    
-   letterorder[i] = this.countLetters(s)[i]; 
-  }
-  
-  // Makes array of five letters to attempt all decryptions for
-  Character[] theob = new Character[3];
-    theob[0] = 't';
-    theob[1] = 'h';
-    theob[2] = 'e';
-    
-  
-  // Adds first ten characters in letterOrder to possibilities and possibilitiestemp
-  for(int i = 0; i < 10; i++) {
-
-    possibilities.append(letterorder[i].toString());
-    possibilitiestemp.append(letterorder[i].toString());
-  }
-  
-  StringBuilder w = new StringBuilder("--------------------------");
-  
-  for(int i = 0; i < 10; i++) {
-     
-     Character tempi = new Character(possibilities.charAt(i));
-     w.replace(4, 5, tempi.toString());
-     possibilities.delete(i, i + 1);
-
-     
-     for(int j = 0; j < 9; j++) {
-       
-       Character tempj = new Character(possibilities.charAt(j));
-       w.replace(19, 20, tempj.toString());
-       possibilities.delete(j, j + 1);
-       
-       for(int k = 0; k < 8; k++) {
-         
-         Character tempk = new Character(possibilities.charAt(k));
-         w.replace(7, 8, tempk.toString());
-         
-         ranfw++;
-         theobkeys[ranfw - 1] = new Key(w.toString());
-         System.out.println(w);
-         
-       }
-       possibilities.insert(j, tempj);
-     }
-     
-     possibilities.insert(i, tempi);
-   }
-   
-   // makes new tree nodes with key battery
-   for(int z = 0; z < 120; z++) {
-     
-     String name;
-     name = "name" + (z);
-     nodes[z] = new treeNode(theobkeys[z], s, name,this);
-     
-     System.out.println(nodes[z].getKeyedText());
-   }
-   
-  }
 }
-
