@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 /** class for individual BranchNodes in the codebreaking tree
   * @author William Turner
-  * @version 1.3
+  * @version 1.4 4/24/2019
  */
 public class treeNode{
   
@@ -50,7 +50,8 @@ public class treeNode{
     this.coder = c;
     this.name = n;
     
-    this.keyedtext = coder.substitutionMethod(coder.regularalphabet, this.key, text);
+    this.keyedtext = coder.substitutionMethod(this.key, coder.regularalphabet, text);
+    //System.out.println(keyedtext);
     this.percentCorrect = coder.percentWords(keyedtext);
     this.capsList();
     
@@ -72,7 +73,7 @@ public class treeNode{
    this.text = parent.getText();
    this.coder = parent.coder;
    
-   this.keyedtext = coder.substitutionMethod(coder.regularalphabet, this.key, text);
+   this.keyedtext = coder.substitutionMethod(this.key, coder.regularalphabet, text);
    this.percentCorrect = coder.percentWords(keyedtext);
    this.capsList();
   }
@@ -180,9 +181,9 @@ public class treeNode{
       // conditional branch for spaces and string end
       if (keyedtext.charAt(i) == ' ' || i == keyedtext.length() - 1)  {
        
-        if(numcaps == 1) {
-          
-          if(!oneLeft.contains(caps.toString()))
+        if(numcaps == 1 && i > 1) {
+          // &&s prevent single letter words from being added
+          if(!oneLeft.contains(caps.toString()) && keyedtext.charAt(i - 2) != ' ')
          oneLeft.add(caps.toString());
         }
         
@@ -279,17 +280,17 @@ public class treeNode{
     
     if(oneLeft.size() != 0) {
       
-     char c = oneLeft.get(0).charAt(0);
-     
-     int indexc = (c - 65);
+     Character c = (char)(oneLeft.get(0).charAt(0) + 32);
      
      for(int i = 0; i < 26; i ++) {
        
-       Character current = (char)(i + 97);
+       if(this.key.charAt(i) == '-') {
+         
        StringBuilder keybuild = new StringBuilder(this.key.getString());
-       keybuild.replace(indexc, indexc + 1, current.toString());
+       keybuild.replace(i, i + 1, c.toString());
        Key newkey = new Key(keybuild.toString());
        this.addNode(new treeNode(newkey, this, i));
+       }
      }
     }
     
@@ -304,6 +305,8 @@ public class treeNode{
      
      for(int i = 0; i < 26; i++) {
       
+       if(this.key.indexOf(c) == 0 && this.key.charAt(0) != c) {
+         
       Character current = (char)(i + 97);
       StringBuilder keybuild = new StringBuilder(this.key.getString());
       keybuild.replace(indexc, indexc + 1, current.toString());
@@ -311,13 +314,17 @@ public class treeNode{
       
       for(int j = 0; j < 25; j++) {
         
+        if(this.key.indexOf(d) == 0 && this.key.charAt(0) != d) {
+          
        Character current2 = (char)(j + 97);
        keybuild.replace(indexd, indexd + 1, current2.toString());
        Key newkey = new Key(keybuild.toString());
        this.addNode(new treeNode(newkey, this, i));
-      }
+        }
+       }
+      }       
      }
-    }
+   }
 
   }
   /** insertion sort of all branchnodes
@@ -340,5 +347,4 @@ public class treeNode{
     }
   } 
 }
-  
   
