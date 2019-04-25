@@ -1,0 +1,130 @@
+/** William Turner
+  * @Version 1.0 4/24/2019
+ */
+import java.util.ArrayList;
+
+public class LoopTester {
+  
+  String text;
+  Coder coder = new Coder();
+  ArrayList<treeNode> sames = new ArrayList<>();
+  treeNode cnode;
+  
+  public LoopTester(String s) {
+    
+    this.text = s;
+    //this.test();
+  }
+  
+  public void test() {
+    
+    CodeBreakingTree tree = new CodeBreakingTree(this.text, this.coder);
+    cnode = tree.headNode;
+    treeNode pnode;
+    cnode.sortNodes();
+    
+    //System.out.println(cnode.getName());
+    System.out.println(cnode.getText());
+    System.out.println(cnode.getKeyedText());
+    //cnode.showNodes();
+    
+    
+    while(cnode.BranchNodes.get(0).getPercentCorrect() > cnode.getPercentCorrect() ) {
+     
+      for(int i = 1; i < cnode.BranchNodes.size(); i++) {
+        
+       if ( (cnode.BranchNodes.get(0).getPercentCorrect() - cnode.BranchNodes.get(i).getPercentCorrect()) < 1)
+         sames.add(cnode.BranchNodes.get(i));
+       else
+         i = cnode.BranchNodes.size();
+       
+       //System.out.println("loop1");
+      }
+       
+     cnode = cnode.BranchNodes.get(0);
+     cnode.makeNodes();
+     cnode.sortNodes();
+     
+     //System.out.println(cnode.getName()); 
+     
+     System.out.println("_________________________________________________________");
+     System.out.println(cnode.getPercentCorrect());
+     System.out.println(cnode.getKeyedText());
+     
+     //System.out.println("loop2");
+     
+     //for(int i = 0; i < 5; i++) {
+       
+      //System.out.println(cnode.BranchNodes.get(i).key.toString()); 
+     //}
+     //cnode.showNodes();
+    }
+    
+    //System.out.println(cnode.oneLeft);
+    //cnode.showNodes();
+    
+    
+    for(int i = 0; i < 10; i++ ) {
+      
+     treeNode temp = sames.get(0);
+     sames.remove(0);
+     this.testNode(temp);
+    }
+    
+    
+    while(sames.size() != 0 && cnode.getPercentCorrect() < 94) {
+      
+     treeNode temp = sames.get(0);
+     sames.remove(0);
+     
+     try {
+       this.testNode(temp);
+     }
+     
+     catch(IndexOutOfBoundsException ie2) {
+       
+      continue; 
+     }
+     
+     //System.out.println("loop3");
+    }
+    
+  }
+  
+  public void testNode(treeNode n) {
+    
+    cnode = n;
+    cnode.makeNodes();
+    cnode.sortNodes();
+
+    
+    while(cnode.BranchNodes.get(0).getPercentCorrect() > cnode.getPercentCorrect() ) {
+
+      for(int i = 1; i < cnode.BranchNodes.size(); i++) {
+        
+       if ( (cnode.BranchNodes.get(0).getPercentCorrect() - cnode.BranchNodes.get(i).getPercentCorrect()) < 1)
+         sames.add(cnode.BranchNodes.get(i));
+       else
+         i = cnode.BranchNodes.size();
+       
+       //System.out.println("loop4");
+      }
+  
+
+     cnode = cnode.BranchNodes.get(0);
+     cnode.makeNodes();
+     cnode.sortNodes();
+     
+     //System.out.println(cnode.getName()); 
+     
+     System.out.println("_________________________________________________________");
+     System.out.println(cnode.getPercentCorrect());
+     System.out.println(cnode.getKeyedText());
+     //for(int i = 0; i < 5; i++) {
+       
+      //System.out.println(cnode.BranchNodes.get(i).key.toString()); 
+     //}
+     //cnode.showNodes();
+    } 
+  }
+}
