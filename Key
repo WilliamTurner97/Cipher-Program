@@ -1,5 +1,5 @@
 /** @author William Turner
-  * @version 1.1
+  * @version 1.2 2/23/2019
   * Object for monoalphabetic cipher key
  */ 
 public class Key {
@@ -7,14 +7,15 @@ public class Key {
   String keystring;
   
   int[] indexes = new int[26];
- 
+  
   public Key (String s) {
     
     keystring = s;
     
     for(int i = 0; i < s.length(); i++) {
       
-      indexes[((int) s.charAt(i)) - 97] = i;
+      if (s.charAt(i) != '-')
+         indexes[((int) s.charAt(i)) - 97] = i;
     }
       
     }
@@ -46,11 +47,27 @@ public class Key {
     
   }
   
+  public String getString() {
+    
+   return keystring; 
+  }
+  
   /** sets the keystring of a key
     * @param String s the new keystring
    */ 
   public void setString(String s){
     
    this.keystring = s; 
+   
+   for(int i = 0; i < s.length(); i++) {
+      
+      if (s.charAt(i) != '-')
+         indexes[((int) s.charAt(i)) - 97] = i;
+    }
+  }
+  
+  public String toString() {
+    
+   return keystring; 
   }
 }
