@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 /** class for individual BranchNodes in the codebreaking tree
   * @author William Turner
-  * @version 1.4 4/24/2019
+  * @version 1.5 4/26/2019
  */
 public class treeNode{
   
