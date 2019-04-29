@@ -1,22 +1,79 @@
 /** William Turner
-  * @Version 1.0 4/24/2019
+  * @Version 1.1 4/26/2019
  */
 import java.util.ArrayList;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.lang.ArrayIndexOutOfBoundsException;
+import java.lang.NullPointerException;
+import java.util.Stack;
 
-public class LoopTester {
+public class MainLoop {
   
   String text;
   Coder coder = new Coder();
   ArrayList<treeNode> sames = new ArrayList<>();
   treeNode cnode;
   
-  public LoopTester(String s) {
-    
-    this.text = s;
-    //this.test();
-  }
+  StringBuilder content = new StringBuilder("");
   
-  public void test() {
+  String str = new String("start");
+  
+  public MainLoop(String s) {
+    
+    //this.text = s;
+    //this.test();
+    
+    //String content = "";
+    
+    //"CipherExample.txt"
+    
+    try {
+      FileReader f = new FileReader(s);
+      BufferedReader b = new BufferedReader(f);
+      
+      while ((str = b.readLine()) != null) {
+            
+       content.append(str + '\n');
+      }
+      
+      text = content.toString();
+      //System.out.println(content.toString());
+    }
+   
+    // catches prompt printing of relevant information
+    catch (IOException e) {
+      
+      System.out.println("fail");
+    }
+    
+    catch (ArrayIndexOutOfBoundsException a) {
+      
+      System.out.println(str);
+    }
+    
+    catch (NullPointerException n){
+      
+      System.out.println(str);
+    }
+ 
+      /*
+       try {
+        content = new String ( Files.readAllBytes( Paths.get(s) ) );
+      }
+      
+      catch (IOException e) {
+         System.out.println("__");
+      }
+      
+      this.text = content;
+      */
+   }
+  
+  public void loop() {
     
     CodeBreakingTree tree = new CodeBreakingTree(this.text, this.coder);
     cnode = tree.headNode;
@@ -48,7 +105,7 @@ public class LoopTester {
      //System.out.println(cnode.getName()); 
      
      System.out.println("_________________________________________________________");
-     System.out.println(cnode.getPercentCorrect());
+     //System.out.println(cnode.getPercentCorrect());
      System.out.println(cnode.getKeyedText());
      
      //System.out.println("loop2");
@@ -74,6 +131,7 @@ public class LoopTester {
     
     while(sames.size() != 0 && cnode.getPercentCorrect() < 94) {
       
+    
      treeNode temp = sames.get(0);
      sames.remove(0);
      
@@ -83,7 +141,7 @@ public class LoopTester {
      
      catch(IndexOutOfBoundsException ie2) {
        
-      continue; 
+      break; 
      }
      
      //System.out.println("loop3");
@@ -118,7 +176,7 @@ public class LoopTester {
      //System.out.println(cnode.getName()); 
      
      System.out.println("_________________________________________________________");
-     System.out.println(cnode.getPercentCorrect());
+     //System.out.println(cnode.getPercentCorrect());
      System.out.println(cnode.getKeyedText());
      //for(int i = 0; i < 5; i++) {
        
